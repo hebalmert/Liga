@@ -1,0 +1,69 @@
+﻿@page "/heroes/edit/{Id:int}"
+@inject IRepository _repository
+@inject NavigationManager _navigationManager
+@inject SweetAlertService _sweetAlertService
+
+<h3>Editar Pais</h3>
+
+@if (Hero is null)
+{
+    <div class="align-items-center">
+        <img src="https://media0.giphy.com/media/xTk9ZvMnbIiIew7IpW/200w.gif?cid=6c09b9528no5zf72rmxxgit8qceadsnx97ckl8uy7jw4bbsl&rid=200w.gif&ct=g" />
+    </div>
+}
+else
+{
+    <HeroForm @ref="HeroForm" Hero="Hero" onValidSubmit="EditAsync" ReturnAction="Return" />
+}
+
+@code {
+    private Hero? Hero;
+
+    private HeroForm? HeroForm;
+
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHttp = await _repository.Get<Hero>($"api/heroes/{Id}");
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+            {
+                _navigationManager.NavigateTo("/heroes");
+                return;
+
+            }
+
+            var message = await responseHttp.GetErrorMessageAsync();
+            await _sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+
+        Hero = responseHttp.Response;
+    }
+
+    private async Task EditAsync()
+    {
+        var responseHttp = await _repository.Put("api/heroes", Hero);
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await _sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+
+        HeroForm!.FormPostedSuccessFully = true;
+        _navigationManager.NavigateTo("/heroes");
+        return;
+    }
+
+    private void Return()
+    {
+        HeroForm!.FormPostedSuccessFully = true;
+        _navigationManager.NavigateTo("/heroes");
+
+    }
+}

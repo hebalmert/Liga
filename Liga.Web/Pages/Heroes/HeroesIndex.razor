@@ -41,9 +41,8 @@
                             @Item.TotalWeaks
                         </td>
                         <td>
-                            <a class="btn btn-info" href="/countries/details/@Item.Id">Detalle</a>
-                            <a class="btn btn-warning" href="/countries/edit/@Item.Id">Editar</a>
-                            <button class="btn btn-danger" @onclick=@(()=> DeleteAsync(Item.Id))>Borrar</button>
+                            <a class="btn btn-warning" href="/heroes/edit/@Item.Id">Edit</a>
+                            <button class="btn btn-danger" @onclick=@(()=> DeleteAsync(Item.Id))>Delete</button>
                         </td>
                     </tr>
                 }
