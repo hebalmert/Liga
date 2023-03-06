@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Liga.Shared", "Liga.Shared\Liga.Shared.csproj", "{2CB7A2CB-3752-4413-A28E-31D6171D8F02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Liga.Shared", "Liga.Shared\Liga.Shared.csproj", "{2CB7A2CB-3752-4413-A28E-31D6171D8F02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Liga.API", "Liga.API\Liga.API.csproj", "{0685E582-C51F-4854-8FA2-285DD372C501}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Liga.API", "Liga.API\Liga.API.csproj", "{0685E582-C51F-4854-8FA2-285DD372C501}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Liga.Web", "Liga.Web\Liga.Web.csproj", "{F8AC36A8-3F0A-4F81-B839-ECE8E2910AB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Liga.Web", "Liga.Web\Liga.Web.csproj", "{F8AC36A8-3F0A-4F81-B839-ECE8E2910AB3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,82 @@
+﻿@inject SweetAlertService _sweetAlertServices
+
+<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
+
+<EditForm EditContext="editContext" OnValidSubmit="onValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label>Hero:</label>
+        <div>
+            <InputText class="form-control" @bind-Value=Hero!.Name />
+            <ValidationMessage For="@(()=> Hero.Name)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Power:</label>
+        <div>
+            <InputText class="form-control" @bind-Value=Hero!.Power />
+            <ValidationMessage For="@(()=> Hero.Power)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Image:</label>
+        <div>
+            <InputText class="form-control" @bind-Value=Hero!.Url />
+            <ValidationMessage For="@(()=> Hero.Url)" />
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit"><span class="bi-list"></span>Save Change</button>
+    <button class="btn btn-success" @onclick="ReturnAction">Go Back</button>
+</EditForm>
+
+@code {
+
+    private EditContext editContext = null!;
+
+    [Parameter]
+    [EditorRequired]
+    public Hero? Hero { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback onValidSubmit { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback ReturnAction { get; set; }
+
+
+    public bool FormPostedSuccessFully { get; set; }
+
+    protected override void OnInitialized()
+    {
+        editContext = new(Hero!);
+    }
+
+    private async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    {
+        var formWasModified = editContext.IsModified();
+        if (!formWasModified || FormPostedSuccessFully)
+        {
+            return;
+        }
+        var result = await _sweetAlertServices.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmation",
+                Text = "Do you want left current Site?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+                CancelButtonText = "No",
+                ConfirmButtonText = "Si"
+            });
+
+        var confirm = !string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+        context.PreventNavigation();
+    }
+
+
+}

@@ -1,0 +1,38 @@
+﻿@page "/heroes/create"
+@inject IRepository _repository
+@inject NavigationManager _navigationManager
+@inject SweetAlertService _sweetAlertService
+
+
+<h3>Crear Hero</h3>
+
+<HeroForm @ref="HeroForm" Hero="Hero" onValidSubmit="Create" ReturnAction="Return">
+
+</HeroForm>
+
+@code {
+    private Hero Hero = new();
+
+    private HeroForm? HeroForm;
+
+    private async Task Create()
+    {
+        var httpReponse = await _repository.Post("api/heroes", Hero);
+        if (httpReponse.Error)
+        {
+            var message = await httpReponse.GetErrorMessageAsync();
+            await _sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+
+        HeroForm!.FormPostedSuccessFully = true;
+        _navigationManager.NavigateTo("/heroes");
+        return;
+    }
+
+    private void Return()
+    {
+        HeroForm!.FormPostedSuccessFully = true;
+        _navigationManager.NavigateTo("/heroes");
+    }
+}
