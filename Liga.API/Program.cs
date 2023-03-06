@@ -11,12 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers()
     .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=DefaultConnection"));
 
 //Para uno de una sola vez en el sistema
@@ -28,10 +25,10 @@ SeedData(app);
 
 async void SeedData(WebApplication app)
 {
-    IServiceScopeFactory scopedFactory = app.Services.GetService<IServiceScopeFactory>();
-    using (IServiceScope scope = scopedFactory!.CreateScope())
+    IServiceScopeFactory? scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+    using (IServiceScope? scope = scopedFactory!.CreateScope())
     {
-        SeedDb service = scope.ServiceProvider.GetService<SeedDb>();
+        SeedDb? service = scope.ServiceProvider.GetService<SeedDb>();
         await service!.SeedAsync();
     }
 }

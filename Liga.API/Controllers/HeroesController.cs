@@ -21,6 +21,7 @@ namespace Liga.API.Controllers
         public async Task<IActionResult> GetAsync(int id)
         {
             var dato = await _context.Heroes
+                .Include(x=> x.Weaknesses)
                 .Where(x => x.Id == id).FirstOrDefaultAsync();
             if (dato == null)
             {
@@ -32,11 +33,12 @@ namespace Liga.API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Hero>>> GetAsync()
         {
-            List<Hero> datos = await _context.Heroes.ToListAsync();
+            List<Hero> datos = await _context.Heroes
+                .Include(x => x.Weaknesses)
+                .ToListAsync();
 
             return Ok(datos);
         }
-
 
         [HttpPost]
         public async Task<ActionResult> PostAsync(Hero hero)

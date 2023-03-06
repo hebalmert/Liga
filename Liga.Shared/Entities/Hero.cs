@@ -14,7 +14,7 @@ namespace Liga.Shared.Entities
 
         [Required(ErrorMessage = "El Campo {0} es obligatorio")]
         [MaxLength(100, ErrorMessage = "El Campo {0} no puede tener mas de {1} Caracteres")]
-        [Display(Name = "Name Herio")]
+        [Display(Name = "Name Hero")]
         public string Name { get; set; } = null!;
 
         [Required(ErrorMessage = "El Campo {0} es obligatorio")]
@@ -26,5 +26,10 @@ namespace Liga.Shared.Entities
         [MaxLength(300, ErrorMessage = "El Campo {0} no puede tener mas de {1} Caracteres")]
         [Display(Name = "Url")]
         public string Url { get; set; } = null!;
+
+        public int TotalWeaks => Weaknesses == null ? 0 : Weaknesses.Count;
+
+        //Relation
+        public ICollection<Weakness> Weaknesses { get; set; }
     }
 }

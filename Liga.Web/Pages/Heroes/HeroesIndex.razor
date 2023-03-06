@@ -1,0 +1,100 @@
+﻿@page "/heroes"
+@inject IRepository _repository
+@inject SweetAlertService _sweetAlertService
+@inject NavigationManager _navigationManager
+
+<h3>HeroesIndex</h3>
+
+<a class="btn btn-outline-primary" href="/heores/create">New Hero</a>
+
+<GenericList MyList="Heroes">
+    <Loading>
+        <div class="align-items-center">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Loading_2.gif?20170503175831" />
+        </div>
+    </Loading>
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Poser</th>
+                    <th>Total Weakness</th>
+                </tr>
+                <tr></tr>
+            </thead>
+            <tbody>
+                @foreach (var Item in Heroes!)
+                {
+                    <tr>
+                        <td>
+                            <img src="@Item.Url" style="height:60px; width:60px" />
+                        </td>
+                        <td>
+                            @Item.Name
+                        </td>
+                        <td>
+                            @Item.Power
+                        </td>
+                        <td>
+                            @Item.TotalWeaks
+                        </td>
+                        <td>
+                            <a class="btn btn-info" href="/countries/details/@Item.Id">Detalle</a>
+                            <a class="btn btn-warning" href="/countries/edit/@Item.Id">Editar</a>
+                            <button class="btn btn-danger" @onclick=@(()=> DeleteAsync(Item.Id))>Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+@code {
+    private List<Hero>? Heroes { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        var responseHttp = await _repository.Get<List<Hero>>("api/heroes");
+        Heroes = responseHttp.Response;
+    }
+
+    private async Task DeleteAsync(int id)
+    {
+        var result = await _sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmation",
+                Text = "Do you really want to Delete the Register?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+                CancelButtonText = "No",
+                ConfirmButtonText = "Si"
+            });
+
+        var confirm = string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+        
+        var responseHttp = await _repository.Delete($"api/heroes/{id}");
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode != HttpStatusCode.NotFound)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await _sweetAlertService.FireAsync("erro", message, SweetAlertIcon.Error);
+                return;
+            }
+        }
+
+        await LoadAsync();
+    }
+}

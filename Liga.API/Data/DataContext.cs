@@ -13,6 +13,9 @@ namespace Liga.API.Data
 
         public DbSet<Hero> Heroes => Set<Hero>();
 
+        public DbSet<Weakness> Weaknesses => Set<Weakness>();
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
