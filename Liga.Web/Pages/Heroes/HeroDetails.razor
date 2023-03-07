@@ -1,9 +1,9 @@
-﻿@page "/heroes/edit/{Id:int}"
+﻿@page "/heroes/details/{Id:int}"
 @inject IRepository _repository
 @inject NavigationManager _navigationManager
 @inject SweetAlertService _sweetAlertService
 
-<h3>Edit Hero</h3>
+<h3>Details Hero</h3>
 
 @if (Hero is null)
 {
@@ -13,17 +13,35 @@
 }
 else
 {
-    <HeroForm @ref="HeroForm" Hero="Hero" onValidSubmit="EditAsync" ReturnAction="Return" />
+    <br/>
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Hero</h2>
+            @Hero.Name
+        </div>
+        <div class="col-md-4">
+            <h2>Power</h2>
+            @Hero.Power
+        </div>
+        <div class="col-md-4">
+            <h2>Weakness</h2>
+            @Hero.Weaknesses.FirstOrDefault()!.Weak
+        </div>
+    </div>
+    <div>
+        <br/>
+@*        <a class="btn btn-info" href="/heroes/details/@Item.Id">Edit</a>*@
+        <a class="btn btn-outline-success" href="/heroes">Volver</a>
+    </div>
 }
 
 @code {
-    private Hero? Hero;
 
-    private HeroForm? HeroForm;
-
+    public Hero? Hero;
 
     [Parameter]
     public int Id { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -43,27 +61,5 @@ else
         }
 
         Hero = responseHttp.Response;
-    }
-
-    private async Task EditAsync()
-    {
-        var responseHttp = await _repository.Put("api/heroes", Hero);
-        if (responseHttp.Error)
-        {
-            var message = await responseHttp.GetErrorMessageAsync();
-            await _sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-            return;
-        }
-
-        HeroForm!.FormPostedSuccessFully = true;
-        _navigationManager.NavigateTo("/heroes");
-        return;
-    }
-
-    private void Return()
-    {
-        HeroForm!.FormPostedSuccessFully = true;
-        _navigationManager.NavigateTo("/heroes");
-
     }
 }

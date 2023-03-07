@@ -19,8 +19,8 @@
                 <tr>
                     <th>Image</th>
                     <th>Name</th>
-                    <th>Poser</th>
-                    <th>Total Weakness</th>
+                    <th>Poder</th>
+                    <th>Total Weakness</th> 
                 </tr>
                 <tr></tr>
             </thead>
@@ -41,6 +41,7 @@
                             @Item.TotalWeaks
                         </td>
                         <td>
+                            <a class="btn btn-info" href="/heroes/details/@Item.Id">Detalle</a>
                             <a class="btn btn-warning" href="/heroes/edit/@Item.Id">Edit</a>
                             <button class="btn btn-danger" @onclick=@(()=> DeleteAsync(Item.Id))>Delete</button>
                         </td>
